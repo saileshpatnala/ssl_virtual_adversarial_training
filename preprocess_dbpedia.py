@@ -13,12 +13,13 @@ from gensim.models import Word2Vec, KeyedVectors
 nltk.download('wordnet')
 nltk.download('stopwords')
 
-DATA_DIR = 'dbpedia_csv'
+DATA_DIR = 'data'
+DBPEDIA_DIR = 'dbpedia_data'
 
 """Loading the data"""
 def load_data():
-    train_data_path = os.path.join(data_dir, 'train.csv')
-    test_data_path = os.path.join(data_dir, 'test.csv')
+    train_data_path = os.path.join(DATA_DIR, DBPEDIA_DIR, 'train.csv')
+    test_data_path = os.path.join(DATA_DIR, DBPEDIA_DIR, 'test.csv')
 
     train_df = pd.read_csv(train_data_path, header=None, names=['class', 'title', 'text'])
     test_df = pd.read_csv(test_data_path, header=None, names=['class', 'title', 'text'])
@@ -63,11 +64,12 @@ w2c_model.wv.vectors.shape
 
 """Saving the word embeddings"""
 def save_word_embeddings(model):
-    model.wv.save('dbpedia.wordembeddings')
+    model.wv.save(os.path.join(DATA_DIR, 'dbpedia.wordembeddings'))
 
 """Loading word embeddings"""
 def load_word_embeddings():
-    word_vectors = KeyedVectors.load('dbpedia.wordembeddings', mmap='r')
+    embeddings_dir = os.path.join(DATA_DIR, 'dbpedia.wordembeddings')
+    word_vectors = KeyedVectors.load(embeddings_dir, mmap='r')
     return word_vectors
 
 """Generating word vectors for text"""
@@ -82,8 +84,8 @@ def vectorize_data(df, word_vectors):
     return df
 
 def save_text_vec_to_pickle():
-    pd.DataFrame(train_df[['text_vec', 'class']]).to_pickle('dbpedia_train_wv.pkl')
-    pd.DataFrame(test_df.text_vec).to_pickle('dbpedia_test_wv.pkl')
+    train_df[['text_vec', 'class']].to_pickle(os.path.join(DATA_DIR, 'dbpedia_train_wv.pkl'))
+    pd.DataFrame(test_df.text_vec).to_pickle(os.path.join(DATA_DIR, 'dbpedia_test_wv.pkl'))
 
 def generate_label_splits(df):
     num_per_class_label_split1 = 2000
@@ -103,8 +105,8 @@ def generate_label_splits(df):
     return label_split1_df, label_split2_df
 
 def save_label_splits_to_pickle(label_split1_df, label_split2_df):
-    label_split1_df.to_pickle('dbpedia_train_label_split1.pkl')
-    label_split2_df.to_pickle('dbpedia_train_label_split2.pkl')
+    label_split1_df.to_pickle(os.path.join(DATA_DIR, 'dbpedia_train_label_split1.pkl'))
+    label_split2_df.to_pickle(os.path.join(DATA_DIR, 'dbpedia_train_label_split2.pkl'))
 
 def main():
     train_df, test_df = load_data()
