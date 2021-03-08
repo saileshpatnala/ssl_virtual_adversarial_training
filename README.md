@@ -21,5 +21,7 @@ $ git lfs install
 
 ## Contact Us
 Sai Patnala - sgp78@cornell.edu
+
 Vince Bartle - vb344@cornell.edu
+
 Charlee Van Eijk - cv286@cornell.edu
